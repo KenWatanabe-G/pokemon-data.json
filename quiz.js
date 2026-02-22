@@ -294,8 +294,27 @@
     }
   }
 
+  // ---- Viewport (mobile keyboard) ----
+  function setupViewport() {
+    function update() {
+      const h = window.visualViewport
+        ? window.visualViewport.height
+        : window.innerHeight;
+      document.documentElement.style.setProperty("--app-height", h + "px");
+    }
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", update);
+      window.visualViewport.addEventListener("scroll", () => {
+        window.scrollTo(0, 0);
+      });
+    }
+    window.addEventListener("resize", update);
+    update();
+  }
+
   // ---- Init ----
   async function init() {
+    setupViewport();
     await loadPokedex();
     updateStartScreen();
     setupEvents();
