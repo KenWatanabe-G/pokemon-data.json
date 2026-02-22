@@ -90,6 +90,10 @@
 
   // ---- Data Loading ----
   async function loadPokedex() {
+    if (typeof POKEDEX_DATA !== "undefined") {
+      state.allPokemon = POKEDEX_DATA;
+      return;
+    }
     const res = await fetch("pokedex.json");
     state.allPokemon = await res.json();
   }

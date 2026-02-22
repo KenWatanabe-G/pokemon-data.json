@@ -1,2 +1,4 @@
 /rawdata
 /scripts/*.json
+pokedex-data.js
+.playwright-mcp/
