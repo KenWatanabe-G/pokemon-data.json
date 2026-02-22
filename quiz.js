@@ -15,6 +15,18 @@
   };
 
   const STORAGE_KEY = "pokemon-quiz-wrong-list";
+  const SETTINGS_KEY = "pokemon-quiz-settings";
+
+  const REGIONS = {
+    kanto: { min: 1, max: 151 },
+    johto: { min: 152, max: 251 },
+    hoenn: { min: 252, max: 386 },
+    sinnoh: { min: 387, max: 493 },
+    unova: { min: 494, max: 649 },
+    kalos: { min: 650, max: 721 },
+    alola: { min: 722, max: 809 },
+    galar: { min: 810, max: 898 },
+  };
 
   // ---- DOM refs ----
   const $ = (id) => document.getElementById(id);
@@ -69,6 +81,62 @@
     ].filter(Boolean);
 
     return names.some((name) => normalize(name) === normalizedInput);
+  }
+
+  function getSelectedRegions() {
+    const checkboxes = document.querySelectorAll(
+      'input[name="region"]:checked',
+    );
+    return Array.from(checkboxes).map((cb) => cb.value);
+  }
+
+  function filterByRegions(pokemonList) {
+    const selected = getSelectedRegions();
+    if (selected.length === 0) return [];
+    return pokemonList.filter((p) =>
+      selected.some((key) => {
+        const r = REGIONS[key];
+        return p.id >= r.min && p.id <= r.max;
+      }),
+    );
+  }
+
+  function updateStartCount() {
+    const count = filterByRegions(state.allPokemon).length;
+    $("start-count").textContent = count;
+    $("btn-start").disabled = count === 0;
+  }
+
+  function saveSettings() {
+    try {
+      const settings = {
+        lang: $("lang-select").value,
+        regions: getSelectedRegions(),
+      };
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch {
+      // ignore
+    }
+  }
+
+  function loadSettings() {
+    try {
+      const data = localStorage.getItem(SETTINGS_KEY);
+      if (!data) return;
+      const settings = JSON.parse(data);
+
+      if (settings.lang) {
+        $("lang-select").value = settings.lang;
+      }
+
+      if (Array.isArray(settings.regions)) {
+        document.querySelectorAll('input[name="region"]').forEach((cb) => {
+          cb.checked = settings.regions.includes(cb.value);
+        });
+      }
+    } catch {
+      // ignore
+    }
   }
 
   function loadSavedWrongList() {
@@ -228,7 +296,34 @@
   // ---- Event Handlers ----
   function setupEvents() {
     $("btn-start").addEventListener("click", () => {
-      startQuiz(state.allPokemon);
+      const filtered = filterByRegions(state.allPokemon);
+      if (filtered.length === 0) return;
+      startQuiz(filtered);
+    });
+
+    document.querySelectorAll('input[name="region"]').forEach((cb) => {
+      cb.addEventListener("change", () => {
+        updateStartCount();
+        saveSettings();
+      });
+    });
+
+    $("lang-select").addEventListener("change", saveSettings);
+
+    $("btn-region-all").addEventListener("click", () => {
+      document.querySelectorAll('input[name="region"]').forEach((cb) => {
+        cb.checked = true;
+      });
+      updateStartCount();
+      saveSettings();
+    });
+
+    $("btn-region-none").addEventListener("click", () => {
+      document.querySelectorAll('input[name="region"]').forEach((cb) => {
+        cb.checked = false;
+      });
+      updateStartCount();
+      saveSettings();
     });
 
     $("btn-start-review").addEventListener("click", () => {
@@ -268,7 +363,8 @@
     });
 
     $("btn-retry-all").addEventListener("click", () => {
-      startQuiz(state.allPokemon);
+      const filtered = filterByRegions(state.allPokemon);
+      startQuiz(filtered.length > 0 ? filtered : state.allPokemon);
     });
 
     $("btn-retry-wrong").addEventListener("click", () => {
@@ -315,8 +411,10 @@
   // ---- Init ----
   async function init() {
     setupViewport();
+    loadSettings();
     await loadPokedex();
     updateStartScreen();
+    updateStartCount();
     setupEvents();
   }
 

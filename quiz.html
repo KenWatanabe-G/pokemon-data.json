@@ -18,7 +18,26 @@
         <option value="english">English</option>
       </select>
     </div>
-    <button id="btn-start" class="btn btn-primary">全898匹でスタート</button>
+
+    <div class="region-select">
+      <label class="lang-label">地方：</label>
+      <div class="region-chips">
+        <label class="region-chip"><input type="checkbox" name="region" value="kanto" checked><span>カントー</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="johto" checked><span>ジョウト</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="hoenn" checked><span>ホウエン</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="sinnoh" checked><span>シンオウ</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="unova" checked><span>イッシュ</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="kalos" checked><span>カロス</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="alola" checked><span>アローラ</span></label>
+        <label class="region-chip"><input type="checkbox" name="region" value="galar" checked><span>ガラル</span></label>
+      </div>
+      <div class="region-actions">
+        <button id="btn-region-all" class="btn btn-small">全選択</button>
+        <button id="btn-region-none" class="btn btn-small">全解除</button>
+      </div>
+    </div>
+
+    <button id="btn-start" class="btn btn-primary"><span id="start-count">898</span>匹でスタート</button>
     <button id="btn-start-review" class="btn btn-secondary" style="display:none;">前回の間違い <span id="review-count"></span>匹で復習</button>
   </div>
 
