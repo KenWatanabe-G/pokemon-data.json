@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポケモン名前当てクイズ</title>
+  <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+  <!-- スタート画面 -->
+  <div id="screen-start" class="screen active">
+    <h1>ポケモン名前当てクイズ</h1>
+    <p class="subtitle">画像を見てポケモンの名前を当てよう！</p>
+    <div class="start-options">
+      <label class="lang-label">回答言語：</label>
+      <select id="lang-select">
+        <option value="japanese" selected>日本語</option>
+        <option value="english">English</option>
+      </select>
+    </div>
+    <button id="btn-start" class="btn btn-primary">全898匹でスタート</button>
+    <button id="btn-start-review" class="btn btn-secondary" style="display:none;">前回の間違い <span id="review-count"></span>匹で復習</button>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <div class="progress">
+        <span id="current-num">1</span> / <span id="total-num">898</span>
+      </div>
+      <div class="score">
+        正解: <span id="correct-count">0</span>　不正解: <span id="wrong-count">0</span>
+      </div>
+      <button id="btn-quit" class="btn btn-small">やめる</button>
+    </div>
+
+    <div class="quiz-body">
+      <div class="image-container">
+        <img id="pokemon-image" src="" alt="ポケモン画像">
+      </div>
+
+      <div id="quiz-input-area">
+        <input type="text" id="answer-input" placeholder="ポケモンの名前を入力" autocomplete="off">
+        <button id="btn-answer" class="btn btn-primary">回答</button>
+        <button id="btn-skip" class="btn btn-secondary">スキップ</button>
+      </div>
+
+      <div id="quiz-feedback" class="feedback" style="display:none;">
+        <div id="feedback-icon"></div>
+        <div id="feedback-text"></div>
+        <div id="feedback-detail"></div>
+        <button id="btn-next" class="btn btn-primary">次へ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="screen-result" class="screen">
+    <h1>結果発表</h1>
+    <div class="result-summary">
+      <div class="result-stat">
+        <div class="stat-num" id="result-total">0</div>
+        <div class="stat-label">出題数</div>
+      </div>
+      <div class="result-stat correct">
+        <div class="stat-num" id="result-correct">0</div>
+        <div class="stat-label">正解</div>
+      </div>
+      <div class="result-stat wrong">
+        <div class="stat-num" id="result-wrong">0</div>
+        <div class="stat-label">不正解</div>
+      </div>
+      <div class="result-stat">
+        <div class="stat-num" id="result-rate">0%</div>
+        <div class="stat-label">正解率</div>
+      </div>
+    </div>
+
+    <div id="wrong-list-section" style="display:none;">
+      <h2>間違えたポケモン</h2>
+      <div id="wrong-list" class="wrong-list"></div>
+    </div>
+
+    <div class="result-actions">
+      <button id="btn-retry-all" class="btn btn-primary">もう一度（全問）</button>
+      <button id="btn-retry-wrong" class="btn btn-secondary" style="display:none;">間違えたポケモンだけ復習</button>
+      <button id="btn-back-top" class="btn btn-secondary">トップへ</button>
+    </div>
+  </div>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
